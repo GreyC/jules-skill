@@ -23,7 +23,7 @@ Designed for headless environments, autonomous agent loops, and developers who w
 ### As a standalone CLI
 
 ```bash
-git clone https://github.com/<you>/jules-skill
+git clone https://github.com/GreyC/jules-skill
 cd jules-skill
 pip install httpx
 export JULES_API_KEY=<your-key>
@@ -33,7 +33,7 @@ python scripts/jules_api.py list
 ### As an agent skill (Claude Code / Gemini CLI)
 
 ```bash
-git clone https://github.com/<you>/jules-skill ~/.agents/skills/jules-skill
+git clone https://github.com/GreyC/jules-skill ~/.agents/skills/jules-skill
 ```
 
 Both Claude Code and Gemini CLI automatically discover skills placed in `~/.agents/skills/`.
