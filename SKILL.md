@@ -7,7 +7,7 @@ description: "Interaction with Jules (Google AI coding agent) via MCP tools. Use
 
 ## Overview
 
-This skill drives Jules via the **`jules-mcp`** MCP server. All API calls are made through MCP tools — no Python scripts needed.
+This skill drives Jules via the **`jules-api-mcp`** MCP server. All API calls are made through MCP tools — no Python scripts needed.
 
 Jules is an **async coding agent** powered by Gemini 2.5 Pro. It clones your repo into a secure Google Cloud VM, generates a multi-step plan, executes it autonomously, and optionally opens a PR.
 
@@ -20,7 +20,7 @@ Install the MCP server and add it to your MCP client config:
   "mcpServers": {
     "jules": {
       "command": "node",
-      "args": ["/path/to/jules-mcp/dist/index.js"],
+      "args": ["/path/to/jules-api-mcp/dist/index.js"],
       "env": {
         "JULES_API_KEY": "<your-key>"
       }
@@ -35,7 +35,7 @@ Or via npx (once published to npm):
   "mcpServers": {
     "jules": {
       "command": "npx",
-      "args": ["jules-mcp"],
+      "args": ["jules-api-mcp"],
       "env": { "JULES_API_KEY": "<your-key>" }
     }
   }
@@ -166,5 +166,5 @@ Jules automatically reads `AGENTS.md` from the repo root. Keep it up to date wit
 
 ## Resources
 
-- **MCP Server**: [github.com/GreyC/jules-mcp](https://github.com/GreyC/jules-mcp)
+- **MCP Server**: [github.com/GreyC/jules-api-mcp](https://github.com/GreyC/jules-api-mcp)
 - **Jules**: [jules.google.com](https://jules.google.com)
