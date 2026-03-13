@@ -1,4 +1,4 @@
-import { JulesClient } from '../src/client';
+import { JulesClient } from '../src/client.ts';
 import assert from 'node:assert';
 import { test } from 'node:test';
 

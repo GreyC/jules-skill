@@ -1,4 +1,4 @@
-import { getApiKey } from './auth';
+import { getApiKey } from './auth.ts';
 
 const BASE_URL = 'https://jules.googleapis.com/v1alpha';
 
