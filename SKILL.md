@@ -157,5 +157,5 @@ Jules automatically reads `AGENTS.md` from the repo root. Keep it up to date wit
 
 ## Resources
 
-- **jules_cli**: `npx jules_cli` or install from `packages/cli`
+- **jules_cli**: `npm install -g @l0r3x/jules-cli` or `npx @l0r3x/jules-cli`
 - **Jules**: [jules.google.com](https://jules.google.com)
