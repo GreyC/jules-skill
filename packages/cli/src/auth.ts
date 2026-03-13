@@ -20,7 +20,7 @@ export function getApiKey(): string {
       }
     }
   } catch (error) {
-    // Ignore errors reading or parsing the config file
+    console.error('Warning: could not read config file:', configPath);
   }
 
   // 3. Neither found, exit with error message
