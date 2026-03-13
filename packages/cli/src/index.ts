@@ -215,16 +215,13 @@ program
         if (!lastMsg) {
           console.log('No message found from Jules.');
         } else {
-          // Extract text from the actual typed payload fields
-          // A real Jules API response has payload inside `message` or similar
-          // Typical Jules activity format: a.message?.text or a.text
           let text = JSON.stringify(lastMsg, null, 2);
-          if (lastMsg.message?.text) {
-            text = lastMsg.message.text;
-          } else if (lastMsg.text) {
-            text = lastMsg.text;
-          } else if (lastMsg.message) {
-            text = typeof lastMsg.message === 'string' ? lastMsg.message : JSON.stringify(lastMsg.message, null, 2);
+          if (lastMsg.planGenerated?.plan?.steps) {
+            text = lastMsg.planGenerated.plan.steps
+              .map((s: any, i: number) => `Step ${i + 1}: ${s.title}`)
+              .join('\n');
+          } else if (lastMsg.userFeedbackRequired?.message) {
+            text = lastMsg.userFeedbackRequired.message;
           }
 
           console.log(text);
@@ -243,25 +240,23 @@ program
   .action(async (sessionId, options) => {
     try {
       const client = new JulesClient();
-      const response = await client.getActivities(sessionId);
-      const activities = response.activities || [];
+      const session = await client.getSession(sessionId);
 
-      // Find an activity with a pull request URL
-      // A typical session activity that contains PR data has `completedSession.pullRequestUrl`
-      // or similar. Let's inspect `completedSession` or `sessionCompletion` payload.
-      const prActivity = activities.find((a: any) => a.completedSession?.pullRequestUrl !== undefined);
+      const outputs = session.outputs || [];
+      const prOutput = outputs.find((o: any) => o.pullRequest?.url);
+      const url = prOutput?.pullRequest?.url;
 
       if (options.json) {
-        console.log(JSON.stringify(prActivity ? { pullRequestUrl: prActivity.completedSession.pullRequestUrl } : {}, null, 2));
+        console.log(JSON.stringify(url ? { pullRequestUrl: url } : {}, null, 2));
       } else {
-        if (prActivity && prActivity.completedSession?.pullRequestUrl) {
-          console.log(prActivity.completedSession.pullRequestUrl);
+        if (url) {
+          console.log(url);
         } else {
-          console.log('No PR URL found in session activities.');
+          console.log('No PR URL found in session outputs.');
         }
       }
     } catch (error: any) {
-      console.error('Error fetching activities:', error.message);
+      console.error('Error fetching session:', error.message);
       process.exit(1);
     }
   });
