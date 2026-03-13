@@ -13,10 +13,16 @@ Jules is an **async coding agent** powered by Gemini 2.5 Pro. It clones your rep
 
 ## Prerequisites
 
-`JULES_API_KEY` must be available. Set it via one of:
+**Step 1 — Install the CLI** (required before any command will work):
+```
+npm install -g @l0r3x/jules-cli
+```
+This makes the `jules_cli` command available globally.
 
-1. **Environment variable**: `export JULES_API_KEY=<your-key>`
-2. **Interactive setup**: `jules_cli setup` (prompts for key, saves to `~/.config/jules/config.json`)
+**Step 2 — Set your API key** via one of:
+
+1. **Interactive setup**: `jules_cli setup` (prompts for key, saves to `~/.config/jules/config.json`)
+2. **Environment variable**: `export JULES_API_KEY=<your-key>`
 
 ## CLI Command Reference
 
