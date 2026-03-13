@@ -1,10 +1,19 @@
 {
-  "name": "jules_cli",
+  "name": "@l0r3x/jules-cli",
   "version": "0.1.0",
-  "description": "Jules CLI",
+  "description": "Jules CLI — manage Jules (Google's async AI coding agent) from the command line",
   "main": "dist/index.js",
   "bin": {
     "jules_cli": "./dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GreyC/jules-skill.git",
+    "directory": "packages/cli"
+  },
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dist"
