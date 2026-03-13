@@ -6,11 +6,9 @@ import inquirer from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import { version } from '../package.json';
 
 const program = new Command();
-
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { version } = require('../../package.json');
 
 program
   .name('jules_cli')
