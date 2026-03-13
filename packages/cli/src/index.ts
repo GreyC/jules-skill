@@ -2,6 +2,7 @@
 
 import { Command } from 'commander';
 import { JulesClient } from './client';
+import { logError } from './logger';
 import inquirer from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -13,13 +14,15 @@ const program = new Command();
 program
   .name('jules_cli')
   .description('Jules CLI')
-  .version(version);
+  .version(version)
+  .option('-d, --debug', 'Enable debug logging');
 
 program
   .command('list')
   .description('List Jules sessions')
   .option('--json', 'Output raw JSON')
   .action(async (options) => {
+    const debug = program.opts().debug;
     try {
       const client = new JulesClient();
       const response = await client.getSessions();
@@ -45,7 +48,7 @@ program
         });
       }
     } catch (error: any) {
-      console.error('Error listing sessions:', error.message);
+      logError('Error listing sessions.', error, debug);
       process.exit(1);
     }
   });
@@ -54,6 +57,7 @@ program
   .command('setup')
   .description('Setup Jules API key')
   .action(async () => {
+    const debug = program.opts().debug;
     try {
       const answers = await inquirer.prompt([
         {
@@ -67,7 +71,7 @@ program
       const apiKey = answers.apiKey;
 
       if (!apiKey) {
-        console.error('API key is required.');
+        logError('API key is required.', null, debug);
         process.exit(1);
       }
 
@@ -84,7 +88,7 @@ program
 
       console.log('Setup complete. API key saved to ~/.config/jules/config.json');
     } catch (error: any) {
-      console.error('Setup failed:', error.message);
+      logError('Setup failed.', error, debug);
       process.exit(1);
     }
   });
@@ -98,6 +102,7 @@ program
   .option('--approve-plan', 'Require plan approval')
   .option('--json', 'Output raw JSON')
   .action(async (options) => {
+    const debug = program.opts().debug;
     try {
       const client = new JulesClient();
 
@@ -128,7 +133,7 @@ program
         console.log(`State: ${state}`);
       }
     } catch (error: any) {
-      console.error('Error creating session:', error.message);
+      logError('Error creating session.', error, debug);
       process.exit(1);
     }
   });
@@ -138,6 +143,7 @@ program
   .description('Show details of a Jules session')
   .option('--json', 'Output raw JSON')
   .action(async (sessionId, options) => {
+    const debug = program.opts().debug;
     try {
       const client = new JulesClient();
       const session = await client.getSession(sessionId);
@@ -155,7 +161,7 @@ program
         console.log(`Last Updated: ${lastUpdated}`);
       }
     } catch (error: any) {
-      console.error('Error fetching session:', error.message);
+      logError('Error fetching session.', error, debug);
       process.exit(1);
     }
   });
@@ -164,12 +170,13 @@ program
   .command('approve <session-id>')
   .description('Approve a Jules session plan')
   .action(async (sessionId) => {
+    const debug = program.opts().debug;
     try {
       const client = new JulesClient();
       await client.approvePlan(sessionId);
       console.log(`Successfully approved plan for session ${sessionId}`);
     } catch (error: any) {
-      console.error('Error approving plan:', error.message);
+      logError('Error approving plan.', error, debug);
       process.exit(1);
     }
   });
@@ -180,6 +187,7 @@ program
   .requiredOption('--message <message>', 'Message to send')
   .option('--json', 'Output raw JSON')
   .action(async (sessionId, options) => {
+    const debug = program.opts().debug;
     try {
       const client = new JulesClient();
       const response = await client.sendMessage(sessionId, options.message);
@@ -190,7 +198,7 @@ program
         console.log(`Successfully sent message to session ${sessionId}`);
       }
     } catch (error: any) {
-      console.error('Error sending message:', error.message);
+      logError('Error sending message.', error, debug);
       process.exit(1);
     }
   });
@@ -200,6 +208,7 @@ program
   .description('Get the last message sent by Jules')
   .option('--json', 'Output raw JSON')
   .action(async (sessionId, options) => {
+    const debug = program.opts().debug;
     try {
       const client = new JulesClient();
       const response = await client.getActivities(sessionId);
@@ -229,7 +238,7 @@ program
         }
       }
     } catch (error: any) {
-      console.error('Error fetching activities:', error.message);
+      logError('Error fetching activities.', error, debug);
       process.exit(1);
     }
   });
@@ -239,6 +248,7 @@ program
   .description('Get the PR URL for a completed session')
   .option('--json', 'Output raw JSON')
   .action(async (sessionId, options) => {
+    const debug = program.opts().debug;
     try {
       const client = new JulesClient();
       const session = await client.getSession(sessionId);
@@ -257,7 +267,7 @@ program
         }
       }
     } catch (error: any) {
-      console.error('Error fetching session:', error.message);
+      logError('Error fetching session.', error, debug);
       process.exit(1);
     }
   });
