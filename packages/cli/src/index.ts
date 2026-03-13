@@ -9,10 +9,13 @@ import * as os from 'os';
 
 const program = new Command();
 
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const { version } = require('../../package.json');
+
 program
   .name('jules_cli')
   .description('Jules CLI')
-  .version('0.1.0');
+  .version(version);
 
 program
   .command('list')
