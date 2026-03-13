@@ -75,12 +75,10 @@ program
       await JulesClient.validateKey(apiKey);
 
       const configDir = path.join(os.homedir(), '.config', 'jules');
-      if (!fs.existsSync(configDir)) {
-        fs.mkdirSync(configDir, { recursive: true });
-      }
+      await fs.promises.mkdir(configDir, { recursive: true });
 
       const configPath = path.join(configDir, 'config.json');
-      fs.writeFileSync(configPath, JSON.stringify({ apiKey }, null, 2));
+      await fs.promises.writeFile(configPath, JSON.stringify({ apiKey }, null, 2));
 
       console.log('Setup complete. API key saved to ~/.config/jules/config.json');
     } catch (error: any) {
