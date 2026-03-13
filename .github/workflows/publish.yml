@@ -8,6 +8,8 @@ on:
 jobs:
   publish:
     runs-on: self-hosted
+    permissions:
+      id-token: write
     steps:
       - uses: actions/checkout@v4
 
@@ -26,6 +28,4 @@ jobs:
 
       - name: Publish
         working-directory: packages/cli
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --provenance --access public
