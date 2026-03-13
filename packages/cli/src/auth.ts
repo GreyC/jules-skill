@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import { logError } from './logger';
 
 export function getApiKey(): string {
   // 1. Check environment variable
@@ -20,10 +21,10 @@ export function getApiKey(): string {
       }
     }
   } catch (error) {
-    console.error('Warning: could not read config file:', configPath);
+    logError('Warning: could not read config file: ' + configPath, error);
   }
 
   // 3. Neither found, exit with error message
-  console.error('No API key found. Set JULES_API_KEY or run: jules_cli setup');
+  logError('No API key found. Set JULES_API_KEY or run: jules_cli setup');
   process.exit(1);
 }
