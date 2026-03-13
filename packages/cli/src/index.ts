@@ -205,21 +205,7 @@ program
       const activities = response.activities || [];
 
       // Filter for Jules's outbound messages
-      // We assume activities contain state changes and messages.
-      // Typically activities have something like `type: "MESSAGE"`, `actor: "JULES"` or similar.
-      // Given no explicit schema details for activities in api_reference.md, we assume
-      // activities might have a "message" or "actor" attribute. If an activity has 'message' but not 'actor'="USER",
-      // or similar, we log it. We'll simply find the last message-like activity.
-      // Wait, let's look at standard Jules API: Activities have a message object.
-      // Let's print the last activity that is a message from JULES.
-
-      const julesMessages = activities.filter((a: any) => {
-        // We'll assume the activity has an "actor" or "role" field, or we check "type"
-        // Without clear schema, we will try our best: check for "message" payload and check if not user
-        if (a.actor === 'USER') return false;
-        if (a.role === 'user') return false;
-        return a.message !== undefined || a.text !== undefined || a.prompt !== undefined;
-      });
+      const julesMessages = activities.filter((a: any) => a.originator === 'agent');
 
       const lastMsg = julesMessages.length > 0 ? julesMessages[julesMessages.length - 1] : null;
 
@@ -229,8 +215,18 @@ program
         if (!lastMsg) {
           console.log('No message found from Jules.');
         } else {
-          // Attempt to extract text content
-          const text = lastMsg.message || lastMsg.text || lastMsg.prompt || JSON.stringify(lastMsg, null, 2);
+          // Extract text from the actual typed payload fields
+          // A real Jules API response has payload inside `message` or similar
+          // Typical Jules activity format: a.message?.text or a.text
+          let text = JSON.stringify(lastMsg, null, 2);
+          if (lastMsg.message?.text) {
+            text = lastMsg.message.text;
+          } else if (lastMsg.text) {
+            text = lastMsg.text;
+          } else if (lastMsg.message) {
+            text = typeof lastMsg.message === 'string' ? lastMsg.message : JSON.stringify(lastMsg.message, null, 2);
+          }
+
           console.log(text);
         }
       }
@@ -250,14 +246,16 @@ program
       const response = await client.getActivities(sessionId);
       const activities = response.activities || [];
 
-      // Find an activity with a pullRequestUrl or similar
-      const prActivity = activities.find((a: any) => a.pullRequestUrl !== undefined);
+      // Find an activity with a pull request URL
+      // A typical session activity that contains PR data has `completedSession.pullRequestUrl`
+      // or similar. Let's inspect `completedSession` or `sessionCompletion` payload.
+      const prActivity = activities.find((a: any) => a.completedSession?.pullRequestUrl !== undefined);
 
       if (options.json) {
-        console.log(JSON.stringify(prActivity ? { pullRequestUrl: prActivity.pullRequestUrl } : {}, null, 2));
+        console.log(JSON.stringify(prActivity ? { pullRequestUrl: prActivity.completedSession.pullRequestUrl } : {}, null, 2));
       } else {
-        if (prActivity && prActivity.pullRequestUrl) {
-          console.log(prActivity.pullRequestUrl);
+        if (prActivity && prActivity.completedSession?.pullRequestUrl) {
+          console.log(prActivity.completedSession.pullRequestUrl);
         } else {
           console.log('No PR URL found in session activities.');
         }

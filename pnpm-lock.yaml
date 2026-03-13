@@ -10,9 +10,6 @@ importers:
 
   packages/cli:
     dependencies:
-      '@types/inquirer':
-        specifier: ^9.0.9
-        version: 9.0.9
       commander:
         specifier: ^12.0.0
         version: 12.1.0
@@ -163,14 +160,8 @@ packages:
       '@types/node':
         optional: true
 
-  '@types/inquirer@9.0.9':
-    resolution: {integrity: sha512-/mWx5136gts2Z2e5izdoRCo46lPp5TMs9R15GTSsgg/XnZyxDWVqoVU3R9lWnccKpqwsJLvRoxbCjoJtZB7DSw==}
-
   '@types/node@20.19.37':
     resolution: {integrity: sha512-8kzdPJ3FsNsVIurqBs7oodNnCEVbni9yUEkaHbgptDACOPW04jimGagZ51E6+lXUwJjgnBw+hyko/lkFWCldqw==}
-
-  '@types/through@0.0.33':
-    resolution: {integrity: sha512-HsJ+z3QuETzP3cswwtzt2vEIiHBk/dCcHGhbmG5X3ecnwFD/lPrMpliGXxSCg03L9AhrdwA4Oz/qfspkDW+xGQ==}
 
   chardet@2.1.1:
     resolution: {integrity: sha512-PsezH1rqdV9VvyNhxxOW32/d75r01NY7TQCmOqomRo15ZSOKbpTFVsfjghxo6JloQUCGnH4k1LGu0R4yCLlWQQ==}
@@ -355,18 +346,9 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.19.37
 
-  '@types/inquirer@9.0.9':
-    dependencies:
-      '@types/through': 0.0.33
-      rxjs: 7.8.2
-
   '@types/node@20.19.37':
     dependencies:
       undici-types: 6.21.0
-
-  '@types/through@0.0.33':
-    dependencies:
-      '@types/node': 20.19.37
 
   chardet@2.1.1: {}
 
