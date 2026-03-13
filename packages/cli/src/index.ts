@@ -9,8 +9,7 @@ import * as os from 'os';
 
 const program = new Command();
 
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { version } = require('../../package.json');
+import { version } from '../package.json';
 
 program
   .name('jules_cli')
