@@ -10,15 +10,9 @@ test('JulesClient constructor uses provided API key', () => {
 
 test('JulesClient constructor uses API key from environment if not provided', (t) => {
   const originalEnvKey = process.env.JULES_API_KEY;
-  // Node's process.env properties are not standard getters and cannot be mocked with mock.getter.
-  // We use direct mutation but leverage t.after for safe cleanup, which is a common testing pattern.
   process.env.JULES_API_KEY = 'env-api-key';
   t.after(() => {
-    if (originalEnvKey === undefined) {
-      delete process.env.JULES_API_KEY;
-    } else {
-      process.env.JULES_API_KEY = originalEnvKey;
-    }
+    process.env.JULES_API_KEY = originalEnvKey;
   });
 
   const client = new JulesClient();
