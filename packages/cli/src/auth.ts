@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
+import fs from 'node:fs';
+import * as path from 'node:path';
+import * as os from 'node:os';
 
 export function getApiKey(): string {
   // 1. Check environment variable
