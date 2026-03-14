@@ -23,7 +23,6 @@ export function getApiKey(): string {
     console.error('Warning: could not read config file:', configPath);
   }
 
-  // 3. Neither found, exit with error message
-  console.error('No API key found. Set JULES_API_KEY or run: jules_cli setup');
-  process.exit(1);
+  // 3. Neither found, throw error
+  throw new Error('No API key found. Set JULES_API_KEY or run: jules_cli setup');
 }

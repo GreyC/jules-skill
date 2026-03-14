@@ -1,6 +1,6 @@
 import { JulesClient } from '../src/client';
 import assert from 'node:assert';
-import { test } from 'node:test';
+import { test, mock } from 'node:test';
 
 test('JulesClient constructor uses provided API key', () => {
   const apiKey = 'test-api-key';
@@ -10,12 +10,15 @@ test('JulesClient constructor uses provided API key', () => {
 
 test('JulesClient constructor uses API key from environment if not provided', (t) => {
   const originalEnvKey = process.env.JULES_API_KEY;
-  // We use direct mutation here because process.env is a special object
-  // and node:test mocks are not yet compatible with it for simple property replacement.
-  // Using t.after ensures the environment is restored regardless of test outcome.
+  // Node's process.env properties are not standard getters and cannot be mocked with mock.getter.
+  // We use direct mutation but leverage t.after for safe cleanup, which is a common testing pattern.
   process.env.JULES_API_KEY = 'env-api-key';
   t.after(() => {
-    process.env.JULES_API_KEY = originalEnvKey;
+    if (originalEnvKey === undefined) {
+      delete process.env.JULES_API_KEY;
+    } else {
+      process.env.JULES_API_KEY = originalEnvKey;
+    }
   });
 
   const client = new JulesClient();
