@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as path from 'path';
-import * as os from 'os';
+import fs from 'node:fs';
+import * as path from 'node:path';
+import * as os from 'node:os';
 
 export function getApiKey(): string {
   // 1. Check environment variable
@@ -23,7 +23,6 @@ export function getApiKey(): string {
     console.error('Warning: could not read config file:', configPath);
   }
 
-  // 3. Neither found, exit with error message
-  console.error('No API key found. Set JULES_API_KEY or run: jules_cli setup');
-  process.exit(1);
+  // 3. Neither found, throw error
+  throw new Error('No API key found. Set JULES_API_KEY or run: jules_cli setup');
 }
