@@ -8,13 +8,16 @@ test('JulesClient constructor uses provided API key', () => {
   assert.strictEqual((client as any).apiKey, apiKey);
 });
 
-test('JulesClient constructor uses API key from environment if not provided', () => {
+test('JulesClient constructor uses API key from environment if not provided', (t) => {
   const originalEnvKey = process.env.JULES_API_KEY;
+  // We use direct mutation here because process.env is a special object
+  // and node:test mocks are not yet compatible with it for simple property replacement.
+  // Using t.after ensures the environment is restored regardless of test outcome.
   process.env.JULES_API_KEY = 'env-api-key';
-  try {
-    const client = new JulesClient();
-    assert.strictEqual((client as any).apiKey, 'env-api-key');
-  } finally {
+  t.after(() => {
     process.env.JULES_API_KEY = originalEnvKey;
-  }
+  });
+
+  const client = new JulesClient();
+  assert.strictEqual((client as any).apiKey, 'env-api-key');
 });
