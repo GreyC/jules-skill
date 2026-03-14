@@ -1,6 +1,6 @@
 import { JulesClient } from '../src/client';
 import assert from 'node:assert';
-import { test, mock } from 'node:test';
+import { test } from 'node:test';
 
 test('JulesClient constructor uses provided API key', () => {
   const apiKey = 'test-api-key';
