@@ -7,24 +7,24 @@ on:
 
 jobs:
   publish:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       id-token: write
+      contents: read
     steps:
       - uses: actions/checkout@v4
-
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
       - name: Install dependencies
-        working-directory: packages/cli
-        run: npm install
-
+        run: pnpm install
       - name: Build
-        working-directory: packages/cli
-        run: npm run build
-
+        run: pnpm --filter @l0r3x/jules-cli run build
       - name: Publish
         working-directory: packages/cli
-        run: npm publish --provenance --access public
+        run: pnpm publish --provenance --access public --no-git-checks

@@ -4,7 +4,7 @@
   "description": "Jules CLI — manage Jules (Google's async AI coding agent) from the command line",
   "main": "dist/index.js",
   "bin": {
-    "jules_cli": "./dist/index.js"
+    "jules-cli": "./dist/index.js"
   },
   "repository": {
     "type": "git",

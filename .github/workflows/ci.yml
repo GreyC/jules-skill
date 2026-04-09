@@ -4,21 +4,23 @@ on:
   pull_request:
     branches:
       - main
+  push:
+    branches:
+      - main
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-
+          cache: 'pnpm'
       - name: Install dependencies
-        working-directory: packages/cli
-        run: npm install
-
+        run: pnpm install
       - name: Build
-        working-directory: packages/cli
-        run: npm run build
+        run: pnpm --filter @l0r3x/jules-cli run build

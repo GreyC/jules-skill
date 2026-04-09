@@ -11,7 +11,7 @@ import { version } from '../package.json';
 const program = new Command();
 
 program
-  .name('jules_cli')
+  .name('jules-cli')
   .description('Jules CLI')
   .version(version);
 
@@ -34,13 +34,10 @@ program
         }
 
         sessions.forEach((session: any) => {
-          // Parse session ID from name e.g., "sessions/123-abc" -> "123-abc"
           const nameParts = session.name ? session.name.split('/') : [];
           const sessionId = nameParts.length > 0 ? nameParts[nameParts.length - 1] : 'unknown';
-
           const state = session.state || 'UNKNOWN';
           const title = session.title || 'Untitled';
-
           console.log(`${sessionId} - [${state}] ${title}`);
         });
       }
@@ -63,25 +60,19 @@ program
           mask: '*',
         },
       ]);
-
       const apiKey = answers.apiKey;
-
       if (!apiKey) {
         console.error('API key is required.');
         process.exit(1);
       }
-
       console.log('Validating API key...');
       await JulesClient.validateKey(apiKey);
-
       const configDir = path.join(os.homedir(), '.config', 'jules');
       if (!fs.existsSync(configDir)) {
         fs.mkdirSync(configDir, { recursive: true });
       }
-
       const configPath = path.join(configDir, 'config.json');
       fs.writeFileSync(configPath, JSON.stringify({ apiKey }, null, 2));
-
       console.log('Setup complete. API key saved to ~/.config/jules/config.json');
     } catch (error: any) {
       console.error('Setup failed:', error.message);
@@ -100,24 +91,23 @@ program
   .action(async (options) => {
     try {
       const client = new JulesClient();
-
       const payload: any = {
+        title: options.prompt.length > 50 ? options.prompt.substring(0, 50) + '...' : options.prompt,
         prompt: options.prompt,
         sourceContext: {
           source: `sources/github/${options.repo}`,
+          githubRepoContext: {
+            startingBranch: 'main'
+          }
         },
       };
-
       if (options.autoPr) {
         payload.automationMode = 'AUTO_CREATE_PR';
       }
-
       if (options.approvePlan) {
         payload.requirePlanApproval = true;
       }
-
       const response = await client.createSession(payload);
-
       if (options.json) {
         console.log(JSON.stringify(response, null, 2));
       } else {
@@ -141,14 +131,12 @@ program
     try {
       const client = new JulesClient();
       const session = await client.getSession(sessionId);
-
       if (options.json) {
         console.log(JSON.stringify(session, null, 2));
       } else {
         const state = session.state || 'UNKNOWN';
         const title = session.title || 'Untitled';
         const lastUpdated = session.updateTime || 'Unknown';
-
         console.log(`Session: ${sessionId}`);
         console.log(`State: ${state}`);
         console.log(`Title: ${title}`);
@@ -183,7 +171,6 @@ program
     try {
       const client = new JulesClient();
       const response = await client.sendMessage(sessionId, options.message);
-
       if (options.json) {
         console.log(JSON.stringify(response, null, 2));
       } else {
@@ -204,12 +191,8 @@ program
       const client = new JulesClient();
       const response = await client.getActivities(sessionId);
       const activities = response.activities || [];
-
-      // Filter for Jules's outbound messages
       const julesMessages = activities.filter((a: any) => a.originator === 'agent');
-
       const lastMsg = julesMessages.length > 0 ? julesMessages[julesMessages.length - 1] : null;
-
       if (options.json) {
         console.log(JSON.stringify(lastMsg || {}, null, 2));
       } else {
@@ -218,13 +201,10 @@ program
         } else {
           let text = JSON.stringify(lastMsg, null, 2);
           if (lastMsg.planGenerated?.plan?.steps) {
-            text = lastMsg.planGenerated.plan.steps
-              .map((s: any, i: number) => `Step ${i + 1}: ${s.title}`)
-              .join('\n');
+            text = lastMsg.planGenerated.plan.steps.map((s: any, i: number) => `Step ${i + 1}: ${s.title}`).join('\n');
           } else if (lastMsg.userFeedbackRequired?.message) {
             text = lastMsg.userFeedbackRequired.message;
           }
-
           console.log(text);
         }
       }
@@ -242,11 +222,9 @@ program
     try {
       const client = new JulesClient();
       const session = await client.getSession(sessionId);
-
       const outputs = session.outputs || [];
       const prOutput = outputs.find((o: any) => o.pullRequest?.url);
       const url = prOutput?.pullRequest?.url;
-
       if (options.json) {
         console.log(JSON.stringify(url ? { pullRequestUrl: url } : {}, null, 2));
       } else {
