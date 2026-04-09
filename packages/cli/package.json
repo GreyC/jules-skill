@@ -1,6 +1,6 @@
 {
   "name": "@l0r3x/jules-cli",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Jules CLI — manage Jules (Google's async AI coding agent) from the command line",
   "main": "dist/index.js",
   "bin": {
