@@ -9,20 +9,21 @@ export class JulesClient {
     this.apiKey = apiKey || getApiKey();
   }
 
-  private getHeaders(): Record<string, string> {
+  private static buildHeaders(apiKey: string): Record<string, string> {
     return {
-      'x-goog-api-key': this.apiKey,
+      'x-goog-api-key': apiKey,
       'Content-Type': 'application/json',
     };
+  }
+
+  private getHeaders(): Record<string, string> {
+    return JulesClient.buildHeaders(this.apiKey);
   }
 
   static async validateKey(apiKey: string): Promise<boolean> {
     const response = await fetch(`${BASE_URL}/sessions`, {
       method: 'GET',
-      headers: {
-        'x-goog-api-key': apiKey,
-        'Content-Type': 'application/json',
-      },
+      headers: JulesClient.buildHeaders(apiKey),
     });
 
     if (!response.ok) {
